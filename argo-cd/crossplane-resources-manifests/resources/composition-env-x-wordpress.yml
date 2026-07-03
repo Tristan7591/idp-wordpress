@@ -139,8 +139,8 @@ spec:
                 host: tp-perso-db-mariadb.tp-perso.svc.cluster.local
                 port: 3306
                 user: bn_wordpress
-                password: "bn_wordpress_pass"
                 database: bitnami_wordpress
+                existingSecret: wordpress-db-credentials
               wordpressConfigureCache: true
               externalCache:
                 host: tp-perso-cache-memcached.tp-perso.svc.cluster.local

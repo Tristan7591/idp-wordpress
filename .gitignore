@@ -1,0 +1,41 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.local.env
+*.local.yaml
+*.local.yml
+
+# Kubernetes access and generated secrets
+.kube/
+kubeconfig
+*.kubeconfig
+secrets/
+**/secrets/
+*-secret.local.yaml
+*-secret.local.yml
+*-credentials.local.yaml
+*-credentials.local.yml
+
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# Argo CD repository credentials are unnecessary for this public repository
+argo-cd/argo-manifests/Repository.yml
+
+# Tooling and VM state
+.vagrant/
+.terraform/
+*.tfstate
+*.tfstate.*
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
