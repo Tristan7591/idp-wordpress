@@ -24,15 +24,20 @@ spec:
             namespace: tp-perso
             chart:
               name: mariadb
-              repository: https://charts.bitnami.com/bitnami
-              version: "11.5.7"
+              repository: https://repo.helmforge.dev
+              version: "2.0.3"
             values:
+              architecture: standalone
               image:
-                debug: true
-              primary: 
+                repository: docker.io/library/mariadb
+                tag: "12.3.2"
+              standalone:
                 persistence:
+                  enabled: true
+                  storageClass: nfs-client
                   size: 1Gi
-              auth: 
+              auth:
+                rootPassword: "root-password-demo"
                 username: "bn_wordpress"
                 database: "bitnami_wordpress"
                 password: "bn_wordpress_pass"

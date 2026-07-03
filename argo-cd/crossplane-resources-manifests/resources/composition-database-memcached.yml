@@ -17,7 +17,6 @@ spec:
         apiVersion: helm.crossplane.io/v1beta1
         kind: Release
         metadata:
-          metadata:
           annotations: {}
         spec:
           rollbackLimit: 3
@@ -25,11 +24,17 @@ spec:
             namespace: tp-perso
             chart:
               name: memcached
-              repository: https://charts.bitnami.com/bitnami
-              version: "6.3.3"
+              repository: https://repo.helmforge.dev
+              version: "1.0.4"
             values:
-              persistence:
-                size: 1Gi
+              architecture: standalone
+              replicaCount: 1
+              image:
+                repository: docker.io/library/memcached
+                tag: "1.6.42"
+              memcached:
+                memoryLimitMB: 64
+                maxConnections: 1024
           providerConfigRef:
             name: default
       patches:
