@@ -199,9 +199,11 @@ Tests fonctionnels réalisés :
 
 La composition d'environnement contient encore un ancien chart WordPress Bitnami. Il faut le migrer vers une image officielle gratuite et réimplémenter proprement l'intégration Memcached avant de synchroniser l'application WordPress.
 
-### Secrets en clair
+### Secrets externes au dépôt
 
-Les mots de passe MariaDB sont présents dans la composition. C'est acceptable uniquement pour une démonstration. La plateforme cible doit recevoir un nom de Secret ou utiliser External Secrets/Vault.
+Les mots de passe initialement présents dans les compositions ont été retirés. MariaDB référence désormais le Secret Kubernetes `tp-perso-db-credentials`. La composition WordPress référence `wordpress-db-credentials`, à provisionner dans le vCluster avant le déploiement du chart. Ces Secrets ne sont pas versionnés ; la cible reste de les alimenter avec External Secrets/Vault plutôt que manuellement.
+
+Un `.gitignore` exclut aussi les fichiers `.env`, kubeconfigs, clés privées, certificats, fichiers de credentials locaux et états d'outils. `argo-cd/argo-manifests/Repository.yml` a été retiré de l'index Git : le dépôt étant public, Argo CD peut le lire sans Secret de dépôt. Le fichier local reste disponible sur la VM mais ne sera plus poussé.
 
 ### RBAC trop large
 
@@ -406,9 +408,15 @@ kubectl get pods,pvc,svc,ingress -n tp-perso
 Test MariaDB :
 
 ```bash
+DB_PASSWORD=$(kubectl get secret tp-perso-db-credentials -n tp-perso \
+  -o jsonpath='{.data.mariadb-user-password}' | base64 -d)
+
 kubectl exec -n tp-perso tp-perso-db-mariadb-0 -- \
-  mariadb -ubn_wordpress -pbn_wordpress_pass bitnami_wordpress \
+  env MARIADB_PWD="$DB_PASSWORD" \
+  mariadb -ubn_wordpress bitnami_wordpress \
   -e 'SELECT 1 AS ok;'
+
+unset DB_PASSWORD
 ```
 
 Test Memcached :
@@ -424,9 +432,8 @@ kubectl run memcached-test -n tp-perso --rm -i --restart=Never \
 1. Migrer WordPress vers une image officielle gratuite et restaurer l'intégration cache.
 2. Corriger les différences Argo CD persistantes sur les `Composition`.
 3. Déclarer l'installation NFS et les prérequis du cluster dans Git.
-4. Sortir tous les secrets des compositions.
+4. Alimenter les Secrets externes avec Vault/External Secrets et organiser leur rotation.
 5. Réduire les permissions de `provider-helm`.
 6. Ajouter des paramètres utiles aux XRD et valider les claims en CI.
 7. Créer un dossier `environments/` et une application Argo CD par environnement ou équipe.
 8. Activer progressivement `selfHeal`, puis `prune` après tests de suppression.
-

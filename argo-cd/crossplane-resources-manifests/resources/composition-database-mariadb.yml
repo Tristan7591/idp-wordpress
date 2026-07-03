@@ -37,10 +37,9 @@ spec:
                   storageClass: nfs-client
                   size: 1Gi
               auth:
-                rootPassword: "root-password-demo"
+                existingSecret: "tp-perso-db-credentials"
                 username: "bn_wordpress"
                 database: "bitnami_wordpress"
-                password: "bn_wordpress_pass"
           providerConfigRef:
             name: default
       patches:
