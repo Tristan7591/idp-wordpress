@@ -26,7 +26,7 @@ spec:
             chart:
               name: memcached
               repository: https://charts.bitnami.com/bitnami
-              version: "7.4.1"
+              version: "6.3.3"
             values:
               persistence:
                 size: 1Gi

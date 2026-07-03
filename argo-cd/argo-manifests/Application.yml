@@ -2,11 +2,11 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: tp-perso-crossplane-resources
-  namespace: argo
+  namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/OlivierKouokam/idp-wordpress.git
+    repoURL: https://github.com/Tristan7591/idp-wordpress.git
     targetRevision: main
     path: argo-cd/crossplane-resources-manifests/resources
   destination:
@@ -15,17 +15,16 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    automated: false
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: tp-perso-wordpress
-  namespace: argo
+  namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/OlivierKouokam/idp-wordpress.git
+    repoURL: https://github.com/Tristan7591/idp-wordpress.git
     targetRevision: main
     path: argo-cd/crossplane-resources-manifests
   destination:
@@ -34,4 +33,3 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    automated: false
